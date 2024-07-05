@@ -31,14 +31,12 @@ func TestDetectEncoding(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			enc, bomLen := DetectEncoding(tt.input)
+			enc, bomLen := detectEncoding(tt.input)
 			assert.Equal(t, tt.expect, enc)
 			assert.Equal(t, tt.bomLen, bomLen)
 		})
 	}
 }
-
-var errEncodingNotSupported = errors.New("htmlindex: invalid encoding name")
 
 func TestNewReader(t *testing.T) {
 	tests := []struct {
@@ -51,13 +49,13 @@ func TestNewReader(t *testing.T) {
 		{"UTF-8 without BOM and without XMP declaration", "test", "test", nil},
 		{"UTF-16LE", "\xFF\xFE\x74\x00\x65\x00\x73\x00\x74\x00", "test", nil},
 		{"Windows-1251", "<?xml encoding=\"Windows-1251\"?>\xC1\xF3\xEB\xE3\xE0\xEA\xEE\xE2", "<?xml encoding=\"Windows-1251\"?>Булгаков", nil},
-		{"Unsupported encoding", "<?xml encoding=\"Windows-1\"?>\xC1\xF3\xEB\xE3\xE0\xEA\xEE\xE2", "<?xml encoding=\"Windows-1251\"?>Булгаков", errEncodingNotSupported},
+		{"IANA Unsupported encoding", "<?xml encoding=\"Windows-1\"?>\xC1\xF3\xEB\xE3\xE0\xEA\xEE\xE2", "<?xml encoding=\"Windows-1\"?>Булгаков", errors.New("ianaindex: invalid encoding name")},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			r := bytes.NewReader([]byte(tt.input))
-			reader, err := NewReader(r)
+			reader, err := newReader(r)
 			if tt.err != nil {
 				assert.Equal(t, tt.err, err)
 				return
