@@ -8,8 +8,6 @@ XML files must contain a BOM at the beginning in the case of unicode characters 
 
 XML files with UTF-8 content may be detected either by BOM or XML declaration. XML files with no BOM or XML declaration will be treated as UTF-8.  
 
-The package also implements functions `NewReader,` which creates io.Reader that converts content to UTF-8, and `DetectEncoding`, which can detect the IANA encoding.
-
 ### u8hex CLI utility
 The `cmd` folder contains the source code of the `u8hex` command-line interface utility, which may be used to get the hex representation of a string with a given character set. It may be useful for debugging.
 
