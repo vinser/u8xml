@@ -1,3 +1,5 @@
+// With u8hex CLI utility they can get the hex representation of a string with a given character set.
+// It may be useful for debugging
 package main
 
 import (
