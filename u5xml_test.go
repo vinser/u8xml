@@ -23,10 +23,11 @@ func TestDetectEncoding(t *testing.T) {
 		{"UTF-32BE with BOM", []byte{0, 0, 0xFE, 0xFF, 0, 0, 't', 0, 0, 0, 'e', 0, 0, 's', 0, 0, 't', 0, 0, 0}, "UTF-32BE", 4},
 		{"UTF-32LE with BOM", []byte{0xFF, 0xFE, 0, 0, 't', 0, 0, 0, 'e', 0, 0, 's', 0, 0, 't', 0, 0, 0, 0, 0}, "UTF-32LE", 4},
 		{"UTF-8 without BOM", []byte{'t', 'e', 's', 't'}, "UTF-8", 0},
-		{"XML declaration with \"ISO-8859-1\" encoding attribute", []byte("<?xml encoding=\"ISO-8859-1\"?>"), "ISO-8859-1", 0},
-		{"XML declaration with empty encoding attribute", []byte("<?xml?>"), "UTF-8", 0},
-		{"XML declaration with unclosed encoding attribute", []byte("<?xml encoding=\"ISO-8859-1"), "UTF-8", 0},
-		{"Too small buffer", []byte("A"), "UTF-8", 0},
+		{`XML declaration with "ISO-8859-1" encoding attribute`, []byte(`<?xml encoding="ISO-8859-1"?>`), "ISO-8859-1", 0},
+		{`XML declaration with 'ISO-8859-1' encoding attribute`, []byte(`<?xml encoding='ISO-8859-1'?>`), "ISO-8859-1", 0},
+		{"XML declaration with empty encoding attribute", []byte(`<?xml?>`), "UTF-8", 0},
+		{"XML declaration with unclosed encoding attribute", []byte(`<?xml encoding="ISO-8859-1`), "UTF-8", 0},
+		{"Too small buffer", []byte(`A`), "UTF-8", 0},
 	}
 
 	for _, tt := range tests {

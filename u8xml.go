@@ -57,14 +57,15 @@ func detectEncoding(buf []byte) (string, int) {
 
 	// Check for an XML declaration with an encoding attribute.
 	// If found, return the encoding specified in the XML declaration.
+	buf = bytes.ReplaceAll(buf, []byte(`'`), []byte(`"`))
 	if len(buf) < 6 || !bytes.HasPrefix(buf, []byte("<?xml")) {
 		return "UTF-8", 0
 	}
-	encStart := bytes.Index(buf, []byte("encoding=\""))
+	encStart := bytes.Index(buf, []byte(`encoding="`))
 	if encStart == -1 {
 		return "UTF-8", 0
 	}
-	encEnd := bytes.Index(buf[encStart+11:], []byte("\""))
+	encEnd := bytes.Index(buf[encStart+11:], []byte(`"`))
 	if encEnd == -1 {
 		return "UTF-8", 0
 	}
