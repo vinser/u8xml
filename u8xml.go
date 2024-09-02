@@ -35,7 +35,7 @@ var boms = []struct {
 	{[]byte{0xFE, 0xFF}, "UTF-16BE"},
 }
 
-// detectEncoding detects the encoding of a byte slice.
+// DetectEncoding detects the encoding of a byte slice.
 //
 // Parameters:
 // - buf: a byte slice to detect the encoding of.
@@ -43,7 +43,7 @@ var boms = []struct {
 // Returns:
 // - string: the detected encoding, or default "UTF-8" if no BOM or XML declaration encoding attribute is found.
 // - int: the length of the BOM if a BOM is found, or 0 otherwise.
-func detectEncoding(buf []byte) (string, int) {
+func DetectEncoding(buf []byte) (string, int) {
 	// Check for a byte order mark (BOM) in the buffer.
 	// If found, return the corresponding encoding and the length of the BOM.
 	for _, b := range boms {
@@ -74,14 +74,14 @@ func detectEncoding(buf []byte) (string, int) {
 
 const bufCapacity = 128
 
-// newReader implements an io reader that converts source bytes to UTF-8.
+// NewReader implements an io reader that converts source bytes to UTF-8.
 //
 // r - input io.Reader
 // Returns io.Reader, error
-func newReader(r io.Reader) (io.Reader, error) {
+func NewReader(r io.Reader) (io.Reader, error) {
 	t := bufio.NewReader(r)
 	buf, _ := t.Peek(bufCapacity)
-	strEnc, bomLen := detectEncoding(buf)
+	strEnc, bomLen := DetectEncoding(buf)
 	if bomLen > 0 {
 		t.Discard(bomLen) // skip BOM
 	}
@@ -101,7 +101,7 @@ func newReader(r io.Reader) (io.Reader, error) {
 // r - input io.Reader
 // Returns *xml.Decoder
 func NewDecoder(r io.Reader) *xml.Decoder {
-	u8r, _ := newReader(r)
+	u8r, _ := NewReader(r)
 	d := xml.NewDecoder(u8r)
 	d.CharsetReader = func(chset string, input io.Reader) (io.Reader, error) {
 		return input, nil

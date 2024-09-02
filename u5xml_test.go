@@ -32,7 +32,7 @@ func TestDetectEncoding(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			enc, bomLen := detectEncoding(tt.input)
+			enc, bomLen := DetectEncoding(tt.input)
 			assert.Equal(t, tt.expect, enc)
 			assert.Equal(t, tt.bomLen, bomLen)
 		})
@@ -56,7 +56,7 @@ func TestNewReader(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			r := bytes.NewReader([]byte(tt.input))
-			reader, err := newReader(r)
+			reader, err := NewReader(r)
 			if tt.err != nil {
 				assert.Equal(t, tt.err, err)
 				return
